@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>首页</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div th:replace="header :: header">...</div>
+<div class="g-doc">
+    <div class="m-tab m-tab-fw m-tab-simple f-cb">
+        <div class="tab">
+            <ul>
+                <li class="z-sel" ><a href="/">所有内容</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="n-plist">
+        <ul th:each="content:${contentList}" class="f-cb" id="plist">
+            <li id="p-1">
+                <a th:href="@{/content/details(id=${content.id})}" class="link">
+                    <div class="img"><img th:src="@{${content.image}}"/></div>
+                    <h3 th:text="${content.title}"/>
+                    <div class="price"><span class="v-unit">¥</span><span th:text="${content.price/100.0}" class="v-value"/></div>
+                    <label th:if=" ${content.amount!=0}" th:text="已购买"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div th:replace="footer :: footer">...</div>
+<script type="text/javascript" src="/js/global.js"></script>
+<script type="text/javascript" src="/js/pageIndex.js"></script>
+</body>
+</html>

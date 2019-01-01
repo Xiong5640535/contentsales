@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>action is everything</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div  data-th-fragment="header">
+    <div class="n-head">
+        <div class="g-doc f-cb">
+            欢迎<label th:if=" ${nickName!=null}" th:text="${nickName}"></label>
+            <div th:if=" ${nickName == null}" class="user">
+                请<a href="/login">[登录]</a>
+            </div>
+            <ul class="nav" th:if=" ${nickName!=null}">
+                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block" style="display:inline-block;"><a href="/exit">退出</a></button></li>
+                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block" style="display:inline-block;"><a href="/finance">财务</a></button></li>
+                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block" style="display:inline-block;"><a href="/cart">购物车</a></button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/global.js"></script>
+<script type="text/javascript" src="/js/pageIndex.js"></script>
+</body>
+</html>
