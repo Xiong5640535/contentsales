@@ -2,6 +2,7 @@ package com.xiongyi.contentsales.controller;
 
 import com.xiongyi.contentsales.entity.Account;
 import com.xiongyi.contentsales.entity.Content;
+import com.xiongyi.contentsales.enums.ContentType;
 import com.xiongyi.contentsales.service.ContentService;
 import com.xiongyi.contentsales.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,39 @@ public class ContentController {
     @Autowired
     private AccountService accountService;
 
+    /**
+     * 登录之后进去内容列表首页
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value ="index", method = RequestMethod.GET)
-    public String index(HttpServletRequest request, String nickName, String role, Model model) {
+    public String index(HttpServletRequest request, int type, Model model) {
         HttpSession session = request.getSession();
-        List<Content> contentList = contentService.getContentList();
+        List<Content> contentList = new ArrayList<>();
+        if(ContentType.UNPURCHASES.getValue() == type) {
+            contentList = contentService.getUnpurchasedContentList();
+        } else if(ContentType.ALL.getValue() == type) {
+            contentList = contentService.getContentList();
+        } else {
+            // 类型错误
+            return "";
+        }
         model.addAttribute("contentList", contentList);
         model.addAttribute("nickName", session.getAttribute("nickName"));
         model.addAttribute("role",session.getAttribute("role"));
         return "index";
     }
 
+    /**
+     * 点击内容图片之后进行内容详情页
+     * @param request
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value ="details", method = RequestMethod.GET)
-    public String details(int id, Model model) {
+    public String details(HttpServletRequest request, int id, Model model) {
         Content content = contentService.getContentById(id);
         if(ObjectUtils.isEmpty(content)) {
             // 错误 没有该商品
@@ -57,9 +79,18 @@ public class ContentController {
             content.setPrice(account.getPrice());
         }
         model.addAttribute("content", content);
+        HttpSession session = request.getSession();
+        model.addAttribute("nickName", session.getAttribute("nickName"));
+        model.addAttribute("role",session.getAttribute("role"));
         return "details";
     }
 
+    /**
+     * 点击购买按钮，将内容商品加入购物车保存在session中
+     * @param request
+     * @param content
+     * @return
+     */
     @RequestMapping(value ="buy", method = RequestMethod.POST)
     public String buy(HttpServletRequest request, Content content) {
         int id = content.getId();
@@ -83,26 +114,37 @@ public class ContentController {
         return "redirect:cart";
     }
 
+    /**
+     * 将session中的购物车取出，查出详情进入购物车界面
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value ="cart", method = RequestMethod.GET)
     public String cart(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Map<Integer,Integer> cart = (Map)session.getAttribute("cart");
         List<Content> contentList = new ArrayList<>();
-        for(Map.Entry<Integer,Integer> map: cart.entrySet()) {
-            int id = map.getKey();
-            int amount = map.getValue();
-            Content content = contentService.getContentById(id);
-            if(content.getAmount() != 0) {
-                // 错误 该商品已被购买
-                return "";
+        if(!CollectionUtils.isEmpty(cart)) {
+            for(Map.Entry<Integer,Integer> map: cart.entrySet()) {
+                int id = map.getKey();
+                int amount = map.getValue();
+                Content content = contentService.getContentById(id);
+                content.setAmount(amount);
+                contentList.add(content);
             }
-            content.setAmount(amount);
-            contentList.add(content);
         }
         model.addAttribute("contentList",contentList);
+        model.addAttribute("nickName", session.getAttribute("nickName"));
+        model.addAttribute("role",session.getAttribute("role"));
         return "cart";
     }
 
+    /**
+     * 在购物车界面中点击结算按钮，将商品保存在订单表中
+     * @param request
+     * @return
+     */
     @RequestMapping(value ="settlement", method = RequestMethod.POST)
     public String settlement(HttpServletRequest request) {
         String[] idsStr = request.getParameterValues("ids");
@@ -114,13 +156,18 @@ public class ContentController {
         }
         for(int i=0;i<idsStr.length;i++) {
             Account account = new Account();
-            account.setContentId(Integer.parseInt(idsStr[i]));
+            int id = Integer.parseInt(idsStr[i]);
+            int amount = Integer.parseInt(amountsStr[i]);
+            account.setContentId(id);
             Content content = contentService.getContentById(Integer.parseInt(idsStr[i]));
             account.setTitle(content.getTitle());
             account.setImage(content.getImage());
             account.setPrice(Long.parseLong(pricesStr[i]));
-            account.setAmount(Integer.parseInt(amountsStr[i]));
+            account.setAmount(amount);
             account.setTime(new Date());
+            // 更新销售数量
+            contentService.updateContentAmountById(id, amount);
+            // 插入订单表
             int insert = accountService.insert(account);
             if(insert <= 0) {
                 // 插入数据库错误
@@ -130,73 +177,24 @@ public class ContentController {
         return "redirect:account";
     }
 
+    /**
+     * 从订单表中查出所有已购买的商品，进行列表展示
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value ="account", method = RequestMethod.GET)
-    public String getContentList(Model model) {
+    public String getContentList(HttpServletRequest request, Model model) {
         List<Account> accountList = accountService.getAccounts();
-        if(CollectionUtils.isEmpty(accountList)) {
-            // 当前没有账单
-            return "";
-        }
         long total = 0;
         for(Account account : accountList) {
             total += account.getPrice()* account.getAmount();
         }
         model.addAttribute("accountList", accountList);
         model.addAttribute("total", total/100.0);
+        HttpSession session = request.getSession();
+        model.addAttribute("nickName", session.getAttribute("nickName"));
+        model.addAttribute("role",session.getAttribute("role"));
         return "account";
     }
-
-//    /**
-//     * 显示创建用户表单
-//     *
-//     */
-//    @RequestMapping(value = "/create", method = RequestMethod.GET)
-//    public String createUserForm(ModelMap map) {
-//        map.addAttribute("user", new User());
-//        map.addAttribute("action", "create");
-//        return "userForm";
-//    }
-//
-//    /**
-//     *  创建用户
-//     *    处理 "/users" 的 POST 请求，用来获取用户列表
-//     *    通过 @ModelAttribute 绑定参数，也通过 @RequestParam 从页面中传递参数
-//     */
-//    @RequestMapping(value = "/create", method = RequestMethod.POST)
-//    public String postUser(@ModelAttribute User user) {
-//        userService.insertByUser(user);
-//        return "redirect:/users/";
-//    }
-//
-//    /**
-//     * 显示需要更新用户表单
-//     *    处理 "/users/{id}" 的 GET 请求，通过 URL 中的 id 值获取 User 信息
-//     *    URL 中的 id ，通过 @PathVariable 绑定参数
-//     */
-//    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
-//    public String getUser(@PathVariable Long id, ModelMap map) {
-//        map.addAttribute("user", userService.findById(id));
-//        map.addAttribute("action", "update");
-//        return "userForm";
-//    }
-//
-//    /**
-//     * 处理 "/users/{id}" 的 PUT 请求，用来更新 User 信息
-//     *
-//     */
-//    @RequestMapping(value = "/update", method = RequestMethod.POST)
-//    public String putUser(@ModelAttribute User user) {
-//        userService.update(user);
-//        return "redirect:/users/";
-//    }
-//
-//    /**
-//     * 处理 "/users/{id}" 的 GET 请求，用来删除 User 信息
-//     */
-//    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-//    public String deleteUser(@PathVariable Long id) {
-//
-//        userService.delete(id);
-//        return "redirect:/users/";
-//    }
 }

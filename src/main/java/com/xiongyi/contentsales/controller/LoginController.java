@@ -1,6 +1,7 @@
 package com.xiongyi.contentsales.controller;
 
 import com.xiongyi.contentsales.entity.User;
+import com.xiongyi.contentsales.enums.ContentType;
 import com.xiongyi.contentsales.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,7 +32,7 @@ public class LoginController {
     }
 
     @RequestMapping(value ="validate", method = RequestMethod.POST)
-    public String validate(HttpServletRequest request, String userName, String password) {
+    public String validate(HttpServletRequest request, String userName, String password, RedirectAttributes redirectAttributes) {
         if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
             // 用户名或者密码为空
             return "";
@@ -42,6 +44,7 @@ public class LoginController {
                 HttpSession session = request.getSession();
                 session.setAttribute("nickName", user.getNickName());
                 session.setAttribute("role",user.getRole());
+                redirectAttributes.addAttribute("type", ContentType.ALL.getValue());
                 return "redirect:/content/index";
             }
         }

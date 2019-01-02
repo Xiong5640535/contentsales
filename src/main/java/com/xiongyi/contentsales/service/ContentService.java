@@ -16,7 +16,11 @@ public interface ContentService {
 
     List<Content> getContentList();
 
+    List<Content> getUnpurchasedContentList();
+
     int updateContentById(Content content);
 
-    int deleteContentById(@Param("id")String id);
+    int deleteContentById(@Param("id")int id);
+
+    int updateContentAmountById(@Param("id")int id, @Param("amount")int amount);
 }

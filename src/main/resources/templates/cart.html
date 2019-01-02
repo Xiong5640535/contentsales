@@ -2,11 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
-    <title>结算</title>
+    <title>购物车</title>
     <link rel="stylesheet" href="/css/style.css"/>
+    <style type="text/css">
+        a{ color: red}
+        a:hover{color: aquamarine}
+    </style>
 </head>
 <body>
 <div th:replace="header :: header">...</div>
+<div th:if="${#lists.isEmpty(contentList)}" align="center">当前购物车没有商品 <a th:href="@{/content/index(type=1)}" th:text="去购买" class="link"/></div>
 <div th:if="${contentList.size()>0}">
     <form th:action="@{/content/settlement}" th:method="post" th:object="${contentList}" >
         <div align="center">

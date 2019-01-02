@@ -33,12 +33,22 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
+    public List<Content> getUnpurchasedContentList() {
+        return contentDao.getUnpurchasedContentList();
+    }
+
+    @Override
     public int updateContentById(Content content) {
         return contentDao.updateContentById(content);
     }
 
     @Override
-    public int deleteContentById(String id) {
+    public int deleteContentById(int id) {
         return contentDao.deleteContentById(id);
+    }
+
+    @Override
+    public int updateContentAmountById(int id, int amount) {
+        return contentDao.updateContentAmountById(id,amount);
     }
 }

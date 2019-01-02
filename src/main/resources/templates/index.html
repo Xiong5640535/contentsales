@@ -11,7 +11,12 @@
     <div class="m-tab m-tab-fw m-tab-simple f-cb">
         <div class="tab">
             <ul>
-                <li class="z-sel" ><a href="/">所有内容</a></li>
+                <li class="z-sel" ><a href="/content/index?type=0">所有内容</a></li>
+            </ul>
+        </div>
+        <div class="tab">
+            <ul>
+                <li class="z-sel" ><a href="/content/index?type=1">未购买内容</a></li>
             </ul>
         </div>
     </div>
@@ -22,7 +27,7 @@
                     <div class="img"><img th:src="@{${content.image}}"/></div>
                     <h3 th:text="${content.title}"/>
                     <div class="price"><span class="v-unit">¥</span><span th:text="${content.price/100.0}" class="v-value"/></div>
-                    <label th:if=" ${content.amount!=0}" th:text="已购买"/>
+                    <font th:if=" ${content.amount!=0}" th:text="已购买" color="red"/>
                 </a>
             </li>
         </ul>

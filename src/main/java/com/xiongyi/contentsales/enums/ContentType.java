@@ -1,23 +1,24 @@
 package com.xiongyi.contentsales.enums;
 
 /**
- * Created by xiongyi on 2018/12/30.
+ * @Auther: xiongyi
+ * @Date: 2019/1/2 11:06
  */
-public enum UserRole {
-    BUYER("buyer", "买家"),
-    SELLER("seller", "卖家");
-    private String value;
+public enum ContentType {
+    ALL(0, "所有商品"),
+    UNPURCHASES(1, "未购买的商品");
+    private int value;
     private String text;
-    UserRole(String value, String text) {
+    ContentType(int value, String text) {
         this.value = value;
         this.text = text;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
