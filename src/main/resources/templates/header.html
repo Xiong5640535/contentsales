@@ -15,8 +15,9 @@
             </div>
             <ul class="nav" th:if=" ${nickName!=null}">
                 <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/login">退出</a></button></li>
-                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/account">财务</a></button></li>
-                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/cart">购物车</a></button></li>
+                <li th:if=" ${role == 'buyer'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/account">财务</a></button></li>
+                <li th:if=" ${role == 'buyer'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/cart">购物车</a></button></li>
+                <li th:if=" ${role == 'seller'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/cart">购物车</a></button></li>
             </ul>
         </div>
     </div>

@@ -3,8 +3,9 @@ package com.xiongyi.contentsales.controller;
 import com.xiongyi.contentsales.entity.Account;
 import com.xiongyi.contentsales.entity.Content;
 import com.xiongyi.contentsales.enums.ContentType;
-import com.xiongyi.contentsales.service.ContentService;
+import com.xiongyi.contentsales.enums.SessionValue;
 import com.xiongyi.contentsales.service.AccountService;
+import com.xiongyi.contentsales.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,8 +52,8 @@ public class ContentController {
             return "";
         }
         model.addAttribute("contentList", contentList);
-        model.addAttribute("nickName", session.getAttribute("nickName"));
-        model.addAttribute("role",session.getAttribute("role"));
+        model.addAttribute("nickName", session.getAttribute(SessionValue.NICKNAME.getValue()));
+        model.addAttribute("role",session.getAttribute(SessionValue.ROLE.getValue()));
         return "index";
     }
 
@@ -80,8 +82,8 @@ public class ContentController {
         }
         model.addAttribute("content", content);
         HttpSession session = request.getSession();
-        model.addAttribute("nickName", session.getAttribute("nickName"));
-        model.addAttribute("role",session.getAttribute("role"));
+        model.addAttribute("nickName", session.getAttribute(SessionValue.NICKNAME.getValue()));
+        model.addAttribute("role",session.getAttribute(SessionValue.ROLE.getValue()));
         return "details";
     }
 
@@ -105,7 +107,7 @@ public class ContentController {
             return "";
         }
         HttpSession session = request.getSession();
-        Map<Integer,Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
+        Map<Integer,Integer> cart = (Map<Integer, Integer>) session.getAttribute(SessionValue.CART.getValue());
         if(ObjectUtils.isEmpty(cart)) {
             cart = new HashMap<>();
         }
@@ -123,7 +125,7 @@ public class ContentController {
     @RequestMapping(value ="cart", method = RequestMethod.GET)
     public String cart(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Map<Integer,Integer> cart = (Map)session.getAttribute("cart");
+        Map<Integer,Integer> cart = (Map)session.getAttribute(SessionValue.CART.getValue());
         List<Content> contentList = new ArrayList<>();
         if(!CollectionUtils.isEmpty(cart)) {
             for(Map.Entry<Integer,Integer> map: cart.entrySet()) {
@@ -135,8 +137,8 @@ public class ContentController {
             }
         }
         model.addAttribute("contentList",contentList);
-        model.addAttribute("nickName", session.getAttribute("nickName"));
-        model.addAttribute("role",session.getAttribute("role"));
+        model.addAttribute("nickName", session.getAttribute(SessionValue.NICKNAME.getValue()));
+        model.addAttribute("role",session.getAttribute(SessionValue.ROLE.getValue()));
         return "cart";
     }
 
@@ -174,6 +176,9 @@ public class ContentController {
                 return "";
             }
         }
+        HttpSession session = request.getSession();
+        // 购买成功后清空购物车
+        session.removeAttribute(SessionValue.CART.getValue());
         return "redirect:account";
     }
 
@@ -193,8 +198,19 @@ public class ContentController {
         model.addAttribute("accountList", accountList);
         model.addAttribute("total", total/100.0);
         HttpSession session = request.getSession();
-        model.addAttribute("nickName", session.getAttribute("nickName"));
-        model.addAttribute("role",session.getAttribute("role"));
+        model.addAttribute("nickName", session.getAttribute(SessionValue.NICKNAME.getValue()));
+        model.addAttribute("role",session.getAttribute(SessionValue.ROLE.getValue()));
         return "account";
+    }
+
+    @RequestMapping(value ="delete", method = RequestMethod.GET)
+    public String deleteContentById(HttpServletRequest request, int id, RedirectAttributes redirectAttributes) {
+        int res = contentService.deleteContentById(id);
+        if(res <= 0) {
+            // 数据库删除错误
+            return "";
+        }
+        redirectAttributes.addAttribute("type", ContentType.ALL.getValue());
+        return "redirect:index";
     }
 }

@@ -25,7 +25,7 @@ public interface ContentDao {
     @Update("update content set title=#{title}, summary=#{summary}, image=#{image}, price=#{price}, text=#{text}, amount=#{amount} where id=#{id}")
     int updateContentById(Content content);
 
-    @Update("update content set valid=#{valid} where id = #{id}")
+    @Update("update content set valid=0 where id = #{id}")
     int deleteContentById(@Param("id")int id);
 
     @Update("update content set amount=#{amount} where id = #{id}")

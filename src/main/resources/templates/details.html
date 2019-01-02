@@ -19,9 +19,12 @@
                         <div class="price">
                             <span class="v-unit">¥</span><span name="price" th:text="${content.price/100.0}" class="v-value"/>
                         </div>
-                        <div class="num">购买数量：<span id="plusNum" class="lessNum"><a>-</a></span><span class="totalNum" id="allNum"></span><span id="addNum" class="moreNum"><a>+</a></span></div>
-                        <div th:if=" ${content.amount==0}">
+                        <div th:if=" ${role == 'buyer'}" class="num">购买数量：<span id="plusNum" class="lessNum"><a>-</a></span><span class="totalNum" id="allNum"></span><span id="addNum" class="moreNum"><a>+</a></span></div>
+                        <div th:if=" ${role == 'buyer' and content.amount==0}">
                             <button type="submit" onclick="button();" class="u-btn u-btn-primary u-btn-lg u-btn-block" style="height:40px;width:50px;display:inline-block;">购买</button>
+                        </div>
+                        <div th:if=" ${role == 'seller'}">
+                            <button type="submit" onclick="button();" class="u-btn u-btn-primary u-btn-lg u-btn-block" style="height:40px;width:50px;display:inline-block;">编辑</button>
                         </div>
                         <div class="oprt f-cb">
                         </div>

@@ -59,6 +59,7 @@
         </table>
         <div class="price" style="margin-right:1px;"><span class="v-unit">总计：¥</span><span th:text="${total}" class="v-value"/></div>
     </div>
+    <div align="center"><a th:href="@{/content/index(type=1)}" th:text="返回购物大厅" class="link"/></div>
 </div>
 <div th:replace="footer :: footer">...</div>
 <script type="text/javascript" src="/js/global.js"></script>
