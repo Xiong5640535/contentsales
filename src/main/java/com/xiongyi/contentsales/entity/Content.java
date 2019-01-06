@@ -15,6 +15,7 @@ public class Content {
     /**
      * 摘要
      */
+
     private String summary;
     /**
      * 图片url地址
@@ -31,7 +32,7 @@ public class Content {
     /**
      * 销售数量
      */
-    private int amount;
+    private int num;
 
     public int getId() {
         return id;
@@ -81,12 +82,12 @@ public class Content {
         this.text = text;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getNum() {
+        return num;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setNum(int num) {
+        this.num = num;
     }
 
     @Override
@@ -98,7 +99,7 @@ public class Content {
                 ", image='" + image + '\'' +
                 ", price=" + price +
                 ", text='" + text + '\'' +
-                ", amount=" + amount +
+                ", amount=" + num +
                 '}';
     }
 }

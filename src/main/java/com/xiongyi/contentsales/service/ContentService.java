@@ -1,7 +1,6 @@
 package com.xiongyi.contentsales.service;
 
 import com.xiongyi.contentsales.entity.Content;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public interface ContentService {
 
     int insert(Content content);
 
-    Content getContentById(@Param("id")int id);
+    Content getContentById(int id);
 
     List<Content> getContentList();
 
@@ -20,7 +19,7 @@ public interface ContentService {
 
     int updateContentById(Content content);
 
-    int deleteContentById(@Param("id")int id);
+    int deleteContentById(int id);
 
-    int updateContentAmountById(@Param("id")int id, @Param("amount")int amount);
+    int updateContentNumById(int id, int amount);
 }

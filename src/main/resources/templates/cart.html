@@ -11,82 +11,17 @@
 </head>
 <body>
 <div th:replace="header :: header">...</div>
-<div th:if="${#lists.isEmpty(contentList)}" align="center">当前购物车没有商品 <a th:href="@{/content/index(type=1)}" th:text="去购买" class="link"/></div>
-<div th:if="${contentList.size()>0}">
-    <form th:action="@{/content/settlement}" th:method="post" th:object="${contentList}" >
-        <div align="center">
-            <table border="1" align="center">
-                <tr style="font-size:26px">
-                    <!--<th width="3%">-->
-                        <!--<input type="checkbox" onclick="chooseAll()" id="chooseAll" name="chooseAll"/>-->
-                    <!--</th>-->
-                    <th type="hidden"></th>
-                    <th>序号</th>
-                    <th>标题</th>
-                    <th>价格</th>
-                    <th>数量</th>
-                </tr>
-                <!--<tbody id="querydata">-->
-                <!--</tbody>-->
-                <tr th:each="content,infoStat : ${contentList}" style="font-size:20px;text-align:center">
-                    <th><input type="hidden" name="ids" th:value="${content.id}"/></th>
-                    <th th:text="${infoStat.index + 1}" style="text-align:center;"/>
-                    <th th:text="${content.title}" style="text-align:center;"/>
-                    <th style="text-align:center;"><input type="hidden" name="prices" th:value="${content.price}" th:text="${content.price/100.0}"/></th>
-                    <th style="text-align:center;"><input type="hidden" name="amounts" th:value="${content.amount}" th:text="${content.amount}"/></th>
-                </tr>
-            </table>
-            <br/>
-            <br/>
-            <button id="listButton" class="u-btn u-btn-primary u-btn-lg u-btn-block" style="height:40px;width:66px;display:inline-block;">购买</button>
-            <button style="height:40px;width:66px;display:inline-block;align:center" class="u-btn u-btn-primary u-btn-lg u-btn-block">退出</button>
-        </div>
-    </form>
+<div class="g-doc" id="settleAccount">
+    <div class="m-tab m-tab-fw m-tab-simple f-cb" >
+        <h2>已添加到购物车的内容</h2>
+    </div>
+    <table id="newTable" class="m-table m-table-row n-table g-b3">
+    </table>
+    <div id="act-btn"><button class="u-btn u-btn-primary" id="back">退出</button>
+        <button class="u-btn u-btn-primary" id="Account">购买</button></div>
 </div>
-
 <div th:replace="footer :: footer">...</div>
 <script type="text/javascript" src="/js/global.js"></script>
-<script type="text/javascript" src="/js/pageIndex.js"></script>
-<!--<script>-->
-    <!--function chooseAll() {-->
-        <!--if ($("#chooseAll").is(':checked')) {-->
-            <!--$(".choose").attr("checked", true);-->
-        <!--} else {-->
-            <!--$(".choose").attr("checked", false);-->
-        <!--}-->
-    <!--}-->
-    <!--var data = contentList;-->
-    <!--for (var i = 0; i < data.length; i++) {-->
-
-        <!--var $tr = $("<tr style='cursor:pointer;'></tr>");-->
-        <!--var $td = $("<td style='font-size:20px;'></td>");-->
-        <!--$tr.append($td.clone().append("<input type='checkbox' name='ckItm' value='" + data[i].platflow + "' class='choose'/>"));-->
-        <!--$tr.append($td.clone().text(data[i].id ? data[i].id : ""));-->
-        <!--$tr.append($td.clone().text(data[i].title ? data[i].title : ""));-->
-        <!--$tr.append($td.clone().text(data[i].price/100.0 ? data[i].price/100.0 : ""));-->
-        <!--$tr.append($td.clone().text(data[i].amount ? data[i].amount : ""));-->
-        <!--$tr.appendTo($("#querydata"));-->
-    <!--}-->
-    <!--$('#listButton').click(function () {-->
-        <!--var list = [];-->
-        <!--$('input[name="ckItm"]:checked').each(function () {-->
-            <!--list.push($(this).val());-->
-        <!--});-->
-        <!--if (list == "") {-->
-            <!--$u.alert("请选择需要购买的商品");-->
-        <!--} else {-->
-            <!--$u.ajax({-->
-                <!--async: false,-->
-                <!--url: "/content/settlement",-->
-                <!--data: {"list[]": list},-->
-                <!--success: function (data) {-->
-                    <!--alert(data);-->
-                <!--},-->
-                <!--error: function (data) {-->
-                <!--}-->
-            <!--});-->
-        <!--}-->
-    <!--});-->
-<!--</script>-->
+<script type="text/javascript" src="/js/settleAccount.js"></script>
 </body>
 </html>

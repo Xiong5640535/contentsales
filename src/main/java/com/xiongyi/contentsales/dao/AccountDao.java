@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface AccountDao {
 
-    @Insert(" insert into account(contentId, title, image, price, amount, time) values (#{contentId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP})")
+    @Insert(" insert into account(contentId, title, image, price, num, time) values (#{contentId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP})")
     int insert(Account order);
 
     @Select("select * from account")

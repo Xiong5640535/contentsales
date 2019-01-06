@@ -29,7 +29,7 @@ public class Account {
     /**
      * 购买时的数量
      */
-    private int amount;
+    private int num;
     /**
      * 购买时间（yyyy-MM-dd hh:mm:ss）
      */
@@ -75,12 +75,12 @@ public class Account {
         this.price = price;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getNum() {
+        return num;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public Date getTime() {

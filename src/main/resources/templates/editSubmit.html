@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>编辑成功</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div th:replace="header :: header">...</div>
+<div class="g-doc">
+    <div class="n-result">
+        <h3>编辑成功！</h3>
+        <p><a th:href="@{/content/details(id=${id})}">[查看内容]</a><a href="/content/index">[返回首页]</a></p>
+    </div>
+</div>
+<div th:replace="footer :: footer">...</div>
+</body>
+</html>

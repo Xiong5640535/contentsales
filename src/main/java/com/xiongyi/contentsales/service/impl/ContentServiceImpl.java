@@ -48,7 +48,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public int updateContentAmountById(int id, int amount) {
-        return contentDao.updateContentAmountById(id,amount);
+    public int updateContentNumById(int id, int num) {
+        return contentDao.updateContentNumById(id,num);
     }
 }

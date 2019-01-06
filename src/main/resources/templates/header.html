@@ -2,22 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
-    <title>action is everything</title>
+    <title>header</title>
     <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
-<div  data-th-fragment="header">
+<div data-th-fragment="header">
+    <div class="n-support">请使用Chrome、Safari等webkit内核的浏览器！</div>
     <div class="n-head">
         <div class="g-doc f-cb">
-            欢迎<label th:if=" ${nickName!=null}" th:text="${nickName}"></label>
-            <div th:if=" ${nickName == null}" class="user">
-                请<a href="/login">[登录]</a>
+            <div class="user">
+                <span th:if=" ${role == 'buyer'}">买家你好，</span>
+                <span th:if=" ${role == 'seller'}">卖家你好，</span>
+                <span class="name" th:text="${nickName}">buyer</span>！<a href="/logout">[退出]</a>
             </div>
-            <ul class="nav" th:if=" ${nickName!=null}">
-                <li><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/login">退出</a></button></li>
-                <li th:if=" ${role == 'buyer'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/account">财务</a></button></li>
-                <li th:if=" ${role == 'buyer'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/cart">购物车</a></button></li>
-                <li th:if=" ${role == 'seller'}"><button class="u-btn u-btn-primary u-btn-lg u-btn-block"><a href="/content/cart">购物车</a></button></li>
+            <ul class="nav">
+                <li><a href="/content/index">首页</a></li>
+                <li th:if=" ${role == 'buyer'}"><a href="/content/account">账务</a></li>
+                <li th:if=" ${role == 'buyer'}"><a href="/content/cart">购物车</a></li>
+                <li th:if=" ${role == 'seller'}"><a href="/content/toPublish">发布</a></li>
             </ul>
         </div>
     </div>

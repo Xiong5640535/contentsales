@@ -1,6 +1,4 @@
-/**
- * Created by xiongyi on 2018/12/30.
- */
+
 var $ = function(id){
     return document.getElementById(id);
 }
@@ -30,40 +28,34 @@ var layer = new Layer();
 
 
 $('add').onclick = function(e){
-    var msg = "您确定要购买吗？";
-    if (confirm(msg)==true){
-        var ele = e.target;
-        var id = ele && ele.dataset.id;
-        var title = ele && ele.dataset.title;
-        var price = ele && ele.dataset.price;
-        var num = $('allNum').innerHTML;
-        var productDetail = {'id':id,'price':price,'title':title,'num':num};
-        alert(productDetail)
-//         var name = 'products';
-//         var productList1 = new Array;
-//         var productList = util.getCookie(name);
-//         if(productList == "" || productList == null){
-//             productList1.push(productDetail);
-//             util.setCookie(name,productList1);
-//         }else if(util.findOne(productList,id)){
-//             util.modifyTwo(productList,id,num);
-//             util.setCookie(name,productList);
-//         }else{
-//             productList.push(productDetail);
-//             util.setCookie(name,productList);
-//         }
-//         console.log(document.cookie);
-// //		util.deleteCookie(name);
-//         e == window.event || e;
-//         layer.reset({
-//             content:'纭鍔犲叆璐墿杞﹀悧锛�',
-//             onconfirm:function(){
-//                 layer.hide();
-//                 loading.show();
-//                 loading.result('娣诲姞璐墿杞︽垚鍔�');
-//             }.bind(this)
-//         }).show();
-        return;  //你也可以在这里做其他的操作
+    var id = $('id').value;
+    var title = $('title').value;
+    var price = $('price').value;
+    var num = $('allNum').innerHTML;
+    var productDetail = {'id':id,'price':price,'title':title,'num':num};
+    var name = 'products';
+    var productList1 = new Array;
+    var productList = util.getCookie(name);
+    if(productList == "" || productList == null){
+        productList1.push(productDetail);
+        util.setCookie(name,productList1);
+    }else if(util.findOne(productList,id)){
+        util.modifyTwo(productList,id,num);
+        util.setCookie(name,productList);
+    }else{
+        productList.push(productDetail);
+        util.setCookie(name,productList);
     }
+    console.log(document.cookie);
+//		util.deleteCookie(name);
+    e == window.event || e;
+    layer.reset({
+        content:'确认加入购物车吗？',
+        onconfirm:function(){
+            layer.hide();
+            loading.show();
+            loading.result('添加购物车成功');
+        }.bind(this)
+    }).show();
     return;
 };

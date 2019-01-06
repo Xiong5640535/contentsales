@@ -7,50 +7,38 @@
 </head>
 <body>
 <div th:replace="header :: header">...</div>
-<form action="/content/buy" th:action="@{/content/buy}" method="post" th:object="${content}" >
-    <div class="g-doc">
-            <div class="n-show f-cb" id="showContent">
-                    <input type="hidden" name="id" th:value="${content.id}"/>
-                    <input type="hidden" name="amount" id="amount"/>
-                    <div class="img"><img name="image" th:src="@{${content.image}}" alt="SICP"/></div>
-                    <div class="cnt">
-                        <h2 name="title" th:text="${content.title}"/>
-                        <p name="summary" th:text="${content.summary}" class="summary"/>
-                        <div class="price">
-                            <span class="v-unit">¥</span><span name="price" th:text="${content.price/100.0}" class="v-value"/>
-                        </div>
-                        <div th:if=" ${role == 'buyer'}" class="num">购买数量：<span id="plusNum" class="lessNum"><a>-</a></span><span class="totalNum" id="allNum"></span><span id="addNum" class="moreNum"><a>+</a></span></div>
-                        <div th:if=" ${role == 'buyer' and content.amount==0}">
-                            <button type="submit" onclick="button();" class="u-btn u-btn-primary u-btn-lg u-btn-block" style="height:40px;width:50px;display:inline-block;">购买</button>
-                        </div>
-                        <div th:if=" ${role == 'seller'}">
-                            <button type="submit" onclick="button();" class="u-btn u-btn-primary u-btn-lg u-btn-block" style="height:40px;width:50px;display:inline-block;">编辑</button>
-                        </div>
-                        <div class="oprt f-cb">
-                        </div>
-                    </div>
+<div class="g-doc" th:object="${content}">
+    <div class="n-show f-cb" id="showContent">
+        <input type="hidden" th:value="${content.id}" id="id"/>
+        <input type="hidden" th:value="${content.title}" id="title"/>
+        <input type="hidden" th:value="${content.price/100.0}" id="price"/>
+        <div class="img"><img name="image" th:src="@{${content.image}}" /></div>
+        <div class="cnt">
+            <h2 th:text="${content.title}"/>
+            <p th:text="${content.summary}" class="summary"/>
+            <div class="price">
+                <span class="v-unit">¥</span><span th:text="${content.price/100.0}" class="v-value"/>
             </div>
-            <div class="m-tab m-tab-fw m-tab-simple f-cb">
-                <h2>详细信息</h2>
+            <div th:if=" ${role == 'buyer'}" class="num">购买数量：<span id="plusNum" class="lessNum"><a>-</a></span><span class="totalNum" id="allNum"></span><span id="addNum" class="moreNum"><a>+</a></span></div>
+            <div th:if=" ${role == 'buyer' and content.num==0}" class="oprt f-cb">
+                <button class="u-btn u-btn-primary" id="add">加入购物车</button>
             </div>
-            <div name="text" th:text="${content.text}" class="n-detail"/>
+            <div th:if=" ${role == 'buyer' and buyprice!=null}" class="oprt f-cb">
+               <span class="u-btn u-btn-primary z-dis">已购买</span>
+               <span class="buyprice">当时购买价格：<label th:text="${buyprice/100.0}"/></span>
+            </div>
+            <div th:if=" ${role == 'seller'}" class="oprt f-cb">
+                <a th:href="@{/content/toEdit(id=${content.id})}" class="u-btn u-btn-primary">编 辑</a>
+            </div>
+        </div>
     </div>
-</form>
+    <div class="m-tab m-tab-fw m-tab-simple f-cb">
+        <h2>详细信息</h2>
+    </div>
+    <div class="n-detail" th:text="${content.text}"/>
+</div>
 <div th:replace="footer :: footer">...</div>
 <script type="text/javascript" src="/js/global.js"></script>
 <script type="text/javascript" src="/js/pageShow.js"></script>
-<script type="text/javascript">
-    function button(){
-        var msg = "您确定要购买吗？";
-        if (confirm(msg)==true){
-            var amount = document.getElementById("allNum").innerHTML;
-            var id = document.getElementById("id")
-            document.getElementById("amount").value=amount;
-            return true;
-        }else{
-            return false;
-        }
-    }
-</script>
 </body>
 </html>

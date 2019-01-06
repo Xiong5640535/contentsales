@@ -4,65 +4,49 @@
     <meta charset="UTF-8"/>
     <title>账务</title>
     <link rel="stylesheet" href="/css/style.css"/>
-    <!-- CSS goes in the document HEAD or added to your external stylesheet -->
-    <style type="text/css">
-        a{ color: red}
-        a:hover{color: aquamarine}
-        table.hovertable {
-            font-family: verdana,arial,sans-serif;
-            font-size:11px;
-            color:#333333;
-            border-width: 1px;
-            border-color: #999999;
-            border-collapse: collapse;
-        }
-        table.hovertable th {
-            background-color:#c3dde0;
-            border-width: 1px;
-            padding: 8px;
-            border-style: solid;
-            border-color: #a9c6c9;
-        }
-        table.hovertable tr {
-            background-color:#d4e3e5;
-        }
-        table.hovertable td {
-            border-width: 1px;
-            padding: 8px;
-            border-style: solid;
-            border-color: #a9c6c9;
-        }
-    </style>
 </head>
 <body>
 <div th:replace="header :: header">...</div>
 <div th:if="${#lists.isEmpty(accountList)}" align="center">您当前还未完成交易 <a th:href="@{/content/index(type=1)}" th:text="去购买" class="link"/></div>
 <div th:if="!${#lists.isEmpty(accountList)}">
-    <div align="center">
-        <table border="1" class="hovertable" align="center">
-            <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>图片</th>
-                <th>购买时间</th>
-                <th>购买价格(¥)</th>
-                <th>购买数量</th>
-            </tr>
-            <tr  th:each="account,infoStat : ${accountList}" onmouseover="this.style.backgroundColor='#FFCCFF';" onmouseout="this.style.backgroundColor='#d4e3e5';">
-                <th th:text="${infoStat.index + 1}"/>
-                <td th:text="${account.title}"/>
-                <td class="img"><img th:src="@{${account.image}}" height="50" width="50"/></td>
-                <td th:text="${#dates.format(account.time, 'yyyy-MM-dd HH:mm:ss')}"/>
-                <td th:text="${account.price/100.0}"/>
-                <td th:text="${account.amount}"/>
-            </tr>
+    <div class="g-doc">
+        <div class="m-tab m-tab-fw m-tab-simple f-cb">
+            <h2>已购买的内容</h2>
+        </div>
+        <table class="m-table m-table-row n-table g-b3">
+            <colgroup>
+                <col class="img"/><col/>
+                <col class="time"/><col/>
+                <col class="num"/><col/>
+                <col class="price"/><col/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>内容图片</th>
+                    <th>内容名称</th>
+                    <th>购买时间</th>
+                    <th>购买数量</th>
+                    <th>购买价格</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="account,infoStat : ${accountList}">
+                    <td><a th:href="@{/content/details(id=${account.contentId})}"><img th:src="@{${account.image}}" /></a></td>
+                    <td><h4 th:text="${account.title}"><a th:href="@{/content/details(id=${content.id})}" /></h4></td>
+                    <td><span th:text="${#dates.format(account.time, 'yyyy-MM-dd HH:mm')}" class="v-time"/></td>
+                    <td><span th:text="${account.num}" class="v-num"/></td>
+                    <td><span class="v-unit">¥</span><span th:text="${account.price/100.0}" class="value"/></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4"><div class="total">总计：</div></td>
+                    <td><span class="v-unit">¥</span><span th:text="${total}" class="value"/></td>
+                </tr>
+            </tfoot>
         </table>
-        <div class="price" style="margin-right:1px;"><span class="v-unit">总计：¥</span><span th:text="${total}" class="v-value"/></div>
     </div>
-    <div align="center"><a th:href="@{/content/index(type=1)}" th:text="返回购物大厅" class="link"/></div>
 </div>
 <div th:replace="footer :: footer">...</div>
-<script type="text/javascript" src="/js/global.js"></script>
-<script type="text/javascript" src="/js/pageIndex.js"></script>
 </body>
 </html>

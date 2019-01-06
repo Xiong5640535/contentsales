@@ -1,26 +1,24 @@
 package com.xiongyi.contentsales.enums;
 
 /**
- * Created by xiongyi on 2019/1/2.
+ * @Auther: xiongyi
+ * @Date: 2019/1/2 11:06
  */
-public enum SessionValue {
-    CART("cart", "购物车"),
-    NICKNAME("nickName", "昵称"),
-    ROLE("role", "角色");
-
-    private String value;
+public enum ContentTypeEnum {
+    ALL(0, "所有商品"),
+    UNPURCHASES(1, "未购买的商品");
+    private int value;
     private String text;
-
-    SessionValue(String value, String text) {
+    ContentTypeEnum(int value, String text) {
         this.value = value;
         this.text = text;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 

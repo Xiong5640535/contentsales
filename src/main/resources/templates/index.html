@@ -10,28 +10,31 @@
 <div class="g-doc">
     <div class="m-tab m-tab-fw m-tab-simple f-cb">
         <div class="tab">
-            <ul>
+            <ul th:if=" ${type == 0}">
                 <li class="z-sel" ><a href="/content/index?type=0">所有内容</a></li>
+                <li th:if=" ${role == 'buyer'}"><a href="/content/index?type=1">未购买内容</a></li>
             </ul>
-        </div>
-        <div class="tab">
-            <ul>
-                <li class="z-sel" ><a href="/content/index?type=1">未购买内容</a></li>
+            <ul th:if=" ${type == 1}">
+                <li><a href="/content/index?type=0">所有内容</a></li>
+                <li th:if=" ${role == 'buyer'}" class="z-sel"><a href="/content/index?type=1">未购买内容</a></li>
             </ul>
         </div>
     </div>
     <div class="n-plist">
-        <ul th:each="content:${contentList}" class="f-cb" id="plist">
-            <li id="p-1">
-                <a th:href="@{/content/details(id=${content.id})}" class="link">
-                    <div class="img"><img th:src="@{${content.image}}"/></div>
-                    <h3 th:text="${content.title}"/>
-                    <div class="price"><span class="v-unit">¥</span><span th:text="${content.price/100.0}" class="v-value"/></div>
-                    <font th:if=" ${role == 'buyer' and content.amount!=0}" th:text="已购买" color="red"/>
-                    <div th:if=" ${role == 'seller' and content.amount!=0}">已卖出<font th:text="${content.amount}" color="red"/></div>
-                    <button th:if=" ${role == 'seller' and content.amount==0}" class="u-btn u-btn-primary u-btn-lg u-btn-block"><a th:href="@{/content/delete(id=${content.id})}" class="link">删除</a></button>
-                </a>
-            </li>
+        <ul class="f-cb" id="plist">
+            <div th:each="content:${contentList}">
+                <li th:id="p-+(${content.id})">
+                    <a th:href="@{/content/details(id=${content.id})}" class="link">
+                        <input type="hidden" th:value="${content.id}"/>
+                        <div class="img"><img th:src="@{${content.image}}"/></div>
+                        <h3 th:text="${content.title}"/>
+                        <div class="price"><span class="v-unit">¥</span><span th:text="${content.price/100.0}" class="v-value"/></div>
+                        <span th:if=" ${role == 'buyer' and content.num!=0}" class="had"><b>已购买</b></span>
+                        <span th:if=" ${role == 'seller' and content.num!=0}" class="had"><b>已售出<font th:text="${content.num}" color="red"/></b></span>
+                    </a>
+                    <span th:if=" ${role == 'seller' and content.num==0}" class="u-btn u-btn-normal u-btn-xs del" th:attr="data-del=${content.id}" th:value="${content.id}">删除</span>
+                </li>
+            </div>
         </ul>
     </div>
 </div>
