@@ -254,6 +254,10 @@ public class ContentController {
     @RequestMapping(value = "/publish",method = RequestMethod.POST)
     public String publish(String title, String summary, String image, String detail, String price) throws Exception {
         logger.info("[ContentController: publish](begin) title={}, summary={}, image={}, detail={}, price={}", title, summary, image, detail, price);
+        if(!isValid(title,summary,detail)) {
+            logger.error("[ContentController: publish] 参数不合法 title={}, summary={}, image={}, detail={}, price={}", title, summary, image, detail, price);
+            return "redirect:/content/toPublish";
+        }
         Content content = new Content();
         content.setTitle(title);
         content.setSummary(summary);
@@ -309,6 +313,11 @@ public class ContentController {
     @RequestMapping(value ="edit", method = RequestMethod.POST)
     public String edit(int id, String title, String summary, String image, String detail, String price, RedirectAttributes redirectAttributes) throws Exception {
         logger.info("[ContentController: edit](begin) id={}, title={}, summary={}, image={}, detail={}, price={}", id, title, summary, image, detail, price);
+        if(!isValid(title,summary,detail)) {
+            logger.error("[ContentController: edit] 参数不合法id={}, title={}, summary={}, image={}, detail={}, price={}", id, title, summary, image, detail, price);
+            redirectAttributes.addAttribute("id", id);
+            return "redirect:/content/toEdit";
+        }
         Content content = new Content();
         content.setId(id);
         content.setTitle(title);
@@ -344,6 +353,16 @@ public class ContentController {
         model.addAttribute("role", role);
         logger.info("[ContentController: editSubmit] (end) id={}, nickName={}, role", id, nickName, role);
         return "editSubmit";
+    }
+
+    private boolean isValid(String title, String summary, String detail) {
+        if(title.length() > 80 || title.length() < 2)
+            return false;
+        if(summary.length() > 140 || summary.length() < 2)
+            return false;
+        if(detail.length() > 1000 || detail.length() < 2)
+            return false;
+        return true;
     }
 
 }
